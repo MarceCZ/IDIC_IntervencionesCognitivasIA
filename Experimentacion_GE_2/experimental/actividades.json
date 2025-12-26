@@ -1,0 +1,182 @@
+ [
+ {
+    "tema": "Inteligencia Artificial",
+    "parte_observacion": {
+        "profesor_explica": "NAO, la inteligencia artificial es la capacidad de los sistemas informáticos para llevar a cabo tareas que habitualmente requieren de la inteligencia humana, como aprender, razonar, reconocer patrones o tomar decisiones, imitando de modo automatizado esos procesos humanos. Por ejemplo, un asistente virtual que responde preguntas utiliza inteligencia artificial para comprender el lenguaje y generar respuestas adecuadas. ¿Se entendió el concepto?",
+        "alumno_respuesta_parcialmente_incorrecta": "Creo que comprendo, profe. Entonces la inteligencia artificial consiste en que las máquinas pueden pensar por sí solas.",
+        "profesor_corrige": "No exactamente NAO. La inteligencia artificial no consiste en que las máquinas puedan pensar por sí solas. En realidad, es el desarrollo de sistemas computacionales que son capaces de cumplir objetivos a través de procesos de aprendizaje y razonamiento. Estos sistemas logran generar predicciones, recomendaciones o decisiones, variando sus niveles de autonomía, desde aquellos que dependen de la supervisión humana hasta otros que operan de manera independiente. ¿Podrías darme un ejemplo?",
+        "alumno_ejemplo_correcto": "Creo que un buen ejemplo sería un sistema que recomienda películas que podrían gustarle al usuario según lo que ha visto previamente.",
+        "profesor_valida": "Es correcto NAO. Muy bien."
+    },
+    "parte_experimentacion": {
+        "pregunta_concepto": "Ahora es tu turno, [participante]. ¿Qué es la inteligencia artificial? | concepto",
+        "repeticion_pregunta_concepto": "Vamos nuevamente con la pregunta [participante], según lo aprendido ¿qué es la inteligencia artificial? | concepto",
+        "pedir_ejemplo": "Muy bien [participante]. Ahora, dame un ejemplo distinto al que tu compañero mencionó anteriormente. | ejemplo",
+        "respuesta_modelo": "Te ayudo un poco con otro ejemplo, [participante]. Puede ser un programa de inteligencia artificial que analiza los correos electrónicos y detecta automáticamente cuáles son spam, moviéndolos a la carpeta correspondiente sin que tengas que hacerlo tú. Es tu turno, [participante]. Ahora intenta dar otro ejemplo.",
+        "respuesta_concepto_modelo": "Te ayudo un poco, [participante]. La inteligencia artificial es la capacidad de los sistemas informáticos de realizar tareas que suelen necesitar inteligencia humana, como aprender, decidir o predecir. Es tu turno [participante], ahora intenta definirlo con tus propias palabras.",
+        "retroalimentacion_positiva": "Excelente, [participante]. Tu respuesta es correcta.",
+        "retroalimentacion_negativa": "Lo lamento, [participante]. Tu respuesta es incorrecta.",
+        "pase_otro_concepto": "Bueno, continuemos explorando los conceptos de inteligencia artificial."
+    }
+  },
+ {
+    "tema": "Algoritmo",
+    "parte_observacion": {
+      "profesor_explica": "NAO, un algoritmo es una secuencia de pasos o instrucciones que un sistema sigue para resolver un problema o realizar una tarea. Por ejemplo, una receta para preparar galletas puede entenderse como un algoritmo, porque indica exactamente qué pasos seguir y en qué orden para obtener el resultado deseado. ¿Se comprendió el concepto?",
+      "alumno_respuesta_parcialmente_incorrecta": "Creo que me queda claro, profe. Entonces un algoritmo puede ser cualquier secuencia de pasos, aunque no se encuentren en orden.",
+      "profesor_corrige": "No con exactitud, NAO. Un algoritmo no es cualquier secuencia de pasos, sino un procedimiento que debe ser preciso, finito y ordenado. Preciso, porque cada instrucción debe estar claramente definida y no dar lugar a ambigüedades. Finito, porque el proceso debe concluir en un número limitado de pasos. Y ordenado, porque el cumplimiento de los pasos en la secuencia correcta es fundamental para que se logre el resultado esperado. ¿Podrías darme un ejemplo?",
+      "alumno_ejemplo_correcto": "Pienso que otro ejemplo de algoritmo sería la secuencia de pasos que sigue un mapa digital para encontrar la ruta más corta. Primero analiza las rutas posibles, luego calcula sus distancias, después compara los resultados y, finalmente, selecciona la opción que permite llegar más rápido al destino.",
+      "profesor_valida": "Es correcto, NAO. Muy bien."
+    },
+    "parte_experimentacion": {
+      "pregunta_concepto": "Ahora es tu turno, [participante]. ¿Qué es un algoritmo? | concepto",
+      "repeticion_pregunta_concepto": "Vamos nuevamente con la pregunta [participante], según lo aprendido ¿qué es un algoritmo? | concepto",
+      "pedir_ejemplo": "Muy bien [participante]. Ahora, elabora un ejemplo diferente al que tu compañero brindó previamente. | ejemplo",
+      "respuesta_modelo": "Quizá este ejemplo te sirva de guía, [participante]. Si queremos usar un sistema digital que apoye el proceso de selección de personal, un algoritmo tendría los siguientes pasos: analizar la información del curriculum de cada postulante, comparar sus habilidades con los requisitos del puesto y, finalmente, identificar qué perfiles coinciden mejor con lo que busca la empresa. Es tu turno, [participante]. Ahora propón un nuevo ejemplo.",
+      "respuesta_concepto_modelo": "Permíteme apoyarte, [participante]. Un algoritmo es un conjunto de instrucciones ordenadas que permiten procesar información y solucionar problemas. Es tu turno [participante], ahora intenta definirlo con tus propias palabras.",
+      "retroalimentacion_positiva": "Estupendo, [participante]. Tu respuesta es correcta.",
+      "retroalimentacion_negativa": "Lo lamento, [participante]. Tu respuesta es incorrecta.",
+      "pase_otro_concepto": "Bueno, continuemos explorando los conceptos de inteligencia artificial."
+    }
+  },
+  {
+    "tema": "Atributo",
+    "parte_observacion": {
+      "profesor_explica": "NAO, un atributo se refiere a una propiedad o característica específica de un objeto, persona o elemento, que sirve para describirlo y puede ser utilizado en los sistemas de inteligencia artificial. Por ejemplo, en una base de datos de estudiantes, el nombre, la edad y la carrera son atributos que describen a cada estudiante. ¿Quedó claro el concepto?",
+      "alumno_respuesta_parcialmente_incorrecta": "Creo que lo entiendo, profe. Entonces un atributo es cualquier propiedad de los datos, aunque no tenga relación con lo que deseo analizar.",
+      "profesor_corrige": "No precisamente, NAO. No todo lo que aparece en los datos es útil. Un atributo debe ser informativo y relevante para la tarea del sistema. En la práctica, los atributos pueden ser numéricos, como la edad de una persona expresada en años, o categóricos, como el color de ojos que presenta, y su adecuada selección es esencial para que el modelo aprenda patrones significativos a partir de los datos. ¿Podrías darme un ejemplo?",
+      "alumno_ejemplo_correcto": "Considero que un ejemplo adecuado sería un conjunto de fotografías de frutas tropicales, donde los atributos pueden ser el color, la forma y el tamaño de cada fruta, ya que esas características permiten describirlas y diferenciarlas.",
+      "profesor_valida": "Es correcto, NAO. Muy bien."
+    },
+    "parte_experimentacion": {
+      "pregunta_concepto": "Ahora es tu turno, [participante]. ¿Qué es un atributo? | concepto",
+      "repeticion_pregunta_concepto": "Vamos nuevamente con la pregunta [participante], según lo aprendido ¿qué es un atributo? | concepto",
+      "pedir_ejemplo": "Muy bien [participante]. Ahora, formula un ejemplo adicional al que tu compañero planteó hace un momento. | ejemplo",
+      "respuesta_modelo": "Te comparto otro ejemplo a modo de apoyo, [participante]. Si tengo un conjunto de fotografías de animales domésticos, los atributos serían el color del pelaje, el tamaño y la forma, ya que esas características permiten describir a cada mascota y distinguirla de las demás. Es tu turno, [participante]. Ahora elabora un ejemplo diferente.",
+      "respuesta_concepto_modelo": "Te guiaré un poco, [participante]. Un atributo es una propiedad de los datos que describe una característica y ayuda al modelo de inteligencia artificial a entenderlos o procesarlos. Es tu turno [participante], ahora intenta definirlo con tus propias palabras.",
+      "retroalimentacion_positiva": "Magnífico, [participante]. Tu respuesta es correcta.",
+      "retroalimentacion_negativa": "Lo lamento, [participante]. Tu respuesta es incorrecta.",
+      "pase_otro_concepto": "Bueno, continuemos explorando los conceptos de inteligencia artificial."
+    }
+  },
+  {
+    "tema": "Instancia",
+    "parte_observacion": {
+      "profesor_explica": "NAO, una instancia es un ejemplo u observación individual dentro de un conjunto de datos, que representa un caso concreto con todos sus atributos. Por ejemplo, en un grupo de estudiantes, cada estudiante representa una instancia. ¿Se comprendió el concepto?",
+      "alumno_respuesta_parcialmente_incorrecta": "Creo que me queda claro, profe. Entonces una instancia es una característica general dentro del conjunto de datos.",
+      "profesor_corrige": "No con exactitud, NAO. No es una característica general. Una instancia es la unidad básica de información en un conjunto de datos. Cada instancia constituye un caso particular que el algoritmo de inteligencia artificial utiliza para construir su conocimiento. ¿Podrías darme un ejemplo?",
+      "alumno_ejemplo_correcto": "Pienso que un ejemplo acertado podría ser un conjunto de fotografías de frutas tropicales, donde la imagen de cada fruta representa una instancia.",
+      "profesor_valida": "Es correcto, NAO. Muy bien."
+    },
+    "parte_experimentacion": {
+      "pregunta_concepto": "Ahora es tu turno, [participante]. ¿Qué es una instancia? | concepto",
+      "repeticion_pregunta_concepto": "Vamos nuevamente con la pregunta [participante], según lo aprendido ¿qué es una instancia? | concepto",
+      "pedir_ejemplo": "Muy bien [participante]. Ahora, elabora un ejemplo diferente al que tu compañero brindó previamente. | ejemplo",
+      "respuesta_modelo": "Quizá este ejemplo te sirva de guía, [participante]. En un conjunto de datos sobre viviendas, cada casa registrada es una instancia. Cada una tiene sus propios atributos, como el número de habitaciones, el tamaño del terreno, el precio y la ubicación. Es tu turno, [participante]. Ahora propón un nuevo ejemplo.",
+      "respuesta_concepto_modelo": "Permíteme apoyarte, [participante]. Una instancia es un ejemplo individual de los datos que contiene valores específicos para cada atributo. Es tu turno [participante], ahora intenta definirlo con tus propias palabras.",
+      "retroalimentacion_positiva": "Estupendo, [participante]. Tu respuesta es correcta.",
+      "retroalimentacion_negativa": "Lo lamento, [participante]. Tu respuesta es incorrecta.",
+      "pase_otro_concepto": "Bueno, continuemos explorando los conceptos de inteligencia artificial."
+    }
+  },
+  {
+    "tema": "Dataset",
+    "parte_observacion": {
+      "profesor_explica": "NAO, un dataset o conjunto de datos es una colección organizada de datos compuesta por múltiples instancias y sus respectivos atributos, que se utiliza para entrenar, evaluar o probar un modelo de inteligencia artificial. Por ejemplo, un dataset puede ser una hoja de cálculo con información de estudiantes, donde cada fila es un estudiante y cada columna representa una característica como nombre, edad o carrera. ¿Se entendió el concepto?",
+      "alumno_respuesta_parcialmente_incorrecta": "Creo que comprendo, profe. Entonces un dataset es cualquier grupo de datos que uno puede encontrar en internet.",
+      "profesor_corrige": "No exactamente, NAO. Un dataset no es simplemente un conjunto de datos, sino una colección estructurada, validada y etiquetada por expertos. Cada uno está compuesto por instancias con sus respectivos atributos y cumple una función específica en el proceso de aprendizaje automático. ¿Podrías darme un ejemplo?",
+      "alumno_ejemplo_correcto": "Creo que un buen ejemplo sería el siguiente. Un dataset sobre animales marinos puede contener información como el tipo de animal, su tamaño y su color. Cada registro corresponde a un animal distinto, como una ballena grande y azul o una medusa pequeña y blanca.",
+      "profesor_valida": "Es correcto, NAO. Muy bien."
+    },
+    "parte_experimentacion": {
+      "pregunta_concepto": "Ahora es tu turno, [participante]. ¿Qué es un dataset? | concepto",
+      "repeticion_pregunta_concepto": "Vamos nuevamente con la pregunta [participante], según lo aprendido ¿qué es un dataset? | concepto",
+      "pedir_ejemplo": "Muy bien [participante]. Ahora, dame un ejemplo distinto al que tu compañero mencionó anteriormente. | ejemplo",
+      "respuesta_modelo": "Te ayudo un poco con otro ejemplo, [participante]. Hablemos de un dataset sobre autos que puede incluir información como la marca, el modelo y el año de fabricación. Cada registro corresponde a un auto distinto, como un Toyota Corola 2015 o un Yip Compass 2025. Es tu turno, [participante]. Ahora intenta dar otro ejemplo.",
+      "respuesta_concepto_modelo": "Te ayudo un poco, [participante]. Un dataset es una colección de datos organizados que se usa para entrenar y evaluar modelos de inteligencia artificial. Es tu turno [participante], ahora intenta definirlo con tus propias palabras.",
+      "retroalimentacion_positiva": "Excelente, [participante]. Tu respuesta es correcta.",
+      "retroalimentacion_negativa": "Lo lamento, [participante]. Tu respuesta es incorrecta.",
+      "pase_otro_concepto": "Bueno, continuemos explorando los conceptos de inteligencia artificial."
+    }
+  },
+  {
+    "tema": "Modelo",
+    "parte_observacion": {
+      "profesor_explica": "NAO, un modelo es una representación matemática que ha aprendido a realizar una tarea específica a partir de los datos contenidos en un dataset. Por ejemplo, un modelo puede predecir el clima a partir de datos históricos de temperatura, humedad y presión atmosférica, y con ello estimar la probabilidad de que llueva mañana. ¿Quedó claro el concepto?",
+      "alumno_respuesta_parcialmente_incorrecta": "Creo que lo entiendo, profe. Entonces un modelo guarda todos los datos que encuentre en un dataset para utilizarlos después.",
+      "profesor_corrige": "No precisamente, NAO. Un modelo no se reduce a guardar datos, sino que aprende patrones y relaciones a partir del dataset para poder generalizarlos a situaciones nuevas. En la práctica, un modelo recibe datos de entrada, los transforma mediante un proceso matemático, y produce resultados que se convierten en información útil para la tarea que debe resolver. ¿Podrías darme un ejemplo?",
+      "alumno_ejemplo_correcto": "Considero que un ejemplo adecuado sería un modelo entrenado para reconocer emociones que identifica cada una a partir de patrones faciales, como la curvatura de la boca o la forma de los ojos. Cuando analiza una nueva imagen, utiliza lo que aprendió para estimar si la persona está feliz, triste o enojada.",
+      "profesor_valida": "Es correcto, NAO. Muy bien."
+    },
+    "parte_experimentacion": {
+      "pregunta_concepto": "Ahora es tu turno, [participante]. ¿Qué es un modelo? | concepto",
+      "repeticion_pregunta_concepto": "Vamos nuevamente con la pregunta [participante], según lo aprendido ¿qué es un modelo? | concepto",
+      "pedir_ejemplo": "Muy bien [participante]. Ahora, formula un ejemplo adicional al que tu compañero planteó hace un momento. | ejemplo",
+      "respuesta_modelo": "Te comparto otro ejemplo a modo de apoyo, [participante]. Una plataforma de música, como Spotifai, utiliza un modelo que aprende los géneros y artistas que una persona escucha con mayor frecuencia. Con esa información, recomienda nuevas canciones o intérpretes similares a sus gustos. Es tu turno, [participante]. Ahora elabora un ejemplo diferente.",
+      "respuesta_concepto_modelo": "Te guiaré un poco, [participante]. Un modelo es una representación matemática que aprende de los datos para realizar una tarea específica. Es tu turno [participante], ahora intenta definirlo con tus propias palabras.",
+      "retroalimentacion_positiva": "Magnífico, [participante]. Tu respuesta es correcta.",
+      "retroalimentacion_negativa": "Lo lamento, [participante]. Tu respuesta es incorrecta.",
+      "pase_otro_concepto": "Bueno, continuemos explorando los conceptos de inteligencia artificial."
+    }
+  },
+  {
+    "tema": "Regresión",
+    "parte_observacion": {
+      "profesor_explica": "NAO, la regresión es un método estadístico que predice un valor numérico a partir de datos que describen una situación, como condiciones o atributos de un caso. Por ejemplo, un modelo de regresión puede predecir el precio de un auto basándose en atributos como el año de fabricación, la marca y el kilometraje. ¿Quedó claro el concepto?",
+      "alumno_respuesta_parcialmente_incorrecta": "Creo que lo entiendo, profe. Entonces la regresión es cuando el modelo trata de adivinar el resultado correcto a partir de los datos.",
+      "profesor_corrige": "No precisamente, NAO. La regresión es un método de modelado que busca establecer la relación entre variables independientes, es decir los atributos, y una variable dependiente de tipo numérico. Su objetivo es estimar o predecir valores continuos, identificando cómo influyen los cambios en una o varias variables sobre el resultado. ¿Podrías darme un ejemplo?",
+      "alumno_ejemplo_correcto": "Considero que un ejemplo adecuado sería un modelo de regresión para predecir el precio de una casa. Este modelo utilizaría datos como el tamaño, la ubicación donde se encuentra, el número de habitaciones o los años de antigüedad.",
+      "profesor_valida": "Es correcto, NAO. Muy bien."
+    },
+    "parte_experimentacion": {
+      "pregunta_concepto": "Ahora es tu turno, [participante]. ¿Qué es la regresión? | concepto",
+      "repeticion_pregunta_concepto": "Vamos nuevamente con la pregunta [participante], según lo aprendido ¿qué es la regresión? | concepto",
+      "pedir_ejemplo": "Muy bien [participante]. Ahora, elabora un ejemplo diferente al que tu compañero brindó previamente. | ejemplo",
+      "respuesta_modelo": "Te comparto otro ejemplo a modo de apoyo, [participante]. Supongamos que un grupo de pescadores quiere predecir cuántos kilos de pulpo venderá durante el mes. Para ello, utilizarían un modelo de regresión basado en datos de ventas pasadas y en variables como la temporada del año, las condiciones climáticas y las vedas pesqueras. Es tu turno, [participante]. Ahora elabora un ejemplo diferente.",
+      "respuesta_concepto_modelo": "Te guiaré un poco, [participante]. La regresión es un método que hace que un modelo estime valores numéricos a partir de los atributos del dataset. Es tu turno [participante], ahora intenta definirlo con tus propias palabras.",
+      "retroalimentacion_positiva": "Magnífico, [participante]. Tu respuesta es correcta.",
+      "retroalimentacion_negativa": "Lo lamento, [participante]. Tu respuesta es incorrecta.",
+      "pase_otro_concepto": "Bueno, continuemos explorando los conceptos de inteligencia artificial."
+    }
+  },
+  {
+    "tema": "Clasificación",
+    "parte_observacion": {
+      "profesor_explica": "NAO, la clasificación es una técnica de inteligencia artificial que se utiliza para asignar una etiqueta o categoría a una instancia, en función de sus atributos. Por ejemplo, un modelo que evalúa a cada paciente a partir de sus atributos, que son sus síntomas, y con esa información determina si tiene gripe o no. ¿Se comprendió el concepto?",
+      "alumno_respuesta_parcialmente_incorrecta": "Creo que me queda claro, profe. Entonces la clasificación es cuando agrupamos datos parecidos dentro de un conjunto, sin necesidad de que el modelo aprenda primero.",
+      "profesor_corrige": "No con exactitud, NAO. La clasificación es un método de modelado que busca aprender, a partir de un conjunto de datos etiquetados, cómo relacionar atributos con categorías previamente definidas. A diferencia de la regresión, que predice valores numéricos, la clasificación predice clases o grupos discretos. Las clases son discretas y finitas, por lo que el resultado siempre pertenece a un conjunto limitado de opciones. ¿Podrías darme un ejemplo?",
+      "alumno_ejemplo_correcto": "Pienso que un ejemplo sería un modelo que clasifica imágenes de gatos a partir de atributos como el color del pelaje, la forma del rostro y el tamaño de las orejas para determinar su raza. Cuando un gato presenta pelaje gris, ojos verdes y una cabeza triangular, el modelo determina que se trata de un Azul Ruso.",
+      "profesor_valida": "Es correcto, NAO. Muy bien."
+    },
+    "parte_experimentacion": {
+      "pregunta_concepto": "Ahora es tu turno, [participante]. ¿Qué es la clasificación? | concepto",
+      "repeticion_pregunta_concepto": "Vamos nuevamente con la pregunta [participante], según lo aprendido ¿qué es la clasificación? | concepto",
+      "pedir_ejemplo": "Muy bien [participante]. Ahora, elabora un ejemplo diferente al que tu compañero brindó previamente. | ejemplo",
+      "respuesta_modelo": "Quizá este ejemplo te sirva de guía, [participante]. Pensemos en un modelo que clasifica noticias, considerando aspectos como la fuente de información y la coherencia del contenido, para identificar si son verdaderas o falsas. Es tu turno, [participante]. Ahora propón un nuevo ejemplo.",
+      "respuesta_concepto_modelo": "Permíteme apoyarte, [participante]. La clasificación es una técnica de inteligencia artificial que asigna una categoría a un dato según sus características. Es tu turno [participante], ahora intenta definirlo con tus propias palabras.",
+      "retroalimentacion_positiva": "Estupendo, [participante]. Tu respuesta es correcta.",
+      "retroalimentacion_negativa": "Lo lamento, [participante]. Tu respuesta es incorrecta.",
+      "pase_otro_concepto": "Bueno, continuemos explorando los conceptos de inteligencia artificial."
+    }
+  },
+  {
+    "tema": "Sesgo",
+    "parte_observacion": {
+      "profesor_explica": "NAO, el sesgo en inteligencia artificial es un error sistemático que puede provocar que un modelo trate de manera diferente a ciertos grupos o datos. Esto significa que el sistema favorece a unos y pone en desventaja a otros sin que esa diferencia esté justificada. Por ejemplo, que un sistema de predicción del clima tienda a pronosticar más lluvia de la que realmente ocurre, porque fue entrenado con datos de una región muy lluviosa, lo cual es un error sistemático. ¿Se comprendió el concepto?",
+      "alumno_respuesta_parcialmente_incorrecta": "Creo que me queda claro, profe. Entonces el sesgo es cuando un modelo se equivoca en algunos casos de manera aleatoria.",
+      "profesor_corrige": "No con exactitud, NAO. El sesgo no es lo mismo que un error aleatorio, ya que se manifiesta de manera repetitiva y consistente, lo cual lo convierte en un error sistemático. El sesgo puede surgir por datos poco representativos, por información incompleta, poco diversa o por decisiones humanas en la construcción del modelo de inteligencia artificial. Como consecuencia, el sistema puede funcionar bien en ciertos contextos o mal en otros. ¿Podrías darme un ejemplo?",
+      "alumno_ejemplo_correcto": "Pienso que un ejemplo acertado podría ser lo sucedido en la empresa Amazon. Esta compañía dejó de utilizar un algoritmo de contratación porque presentaba un sesgo basado en estereotipos. El sistema favorecía a ciertos postulantes porque sus currículums incluían palabras como contratado o captado, términos que aparecen con más frecuencia en currículums de hombres. Esto hacía que el algoritmo aprendiera una preferencia injusta hacia ese grupo.",
+      "profesor_valida": "Es correcto, NAO. Muy bien."
+    },
+    "parte_experimentacion": {
+      "pregunta_concepto": "Ahora es tu turno, [participante]. ¿Qué es el sesgo? | concepto",
+      "repeticion_pregunta_concepto": "Vamos nuevamente con la pregunta [participante], según lo aprendido ¿qué es el sesgo? | concepto",
+      "pedir_ejemplo": "Muy bien [participante]. Ahora, elabora un ejemplo diferente al que tu compañero brindó previamente. | ejemplo",
+      "respuesta_modelo": "Quizá este ejemplo te sirva de guía, [participante]. Un sistema de inteligencia artificial que genera imágenes podría mostrar un sesgo si, al pedirle crear retratos de personas en profesiones especializadas, representa a los hombres como médicos o ingenieros y a las mujeres principalmente como maestras o enfermeras. En este caso, el modelo refleja un sesgo de género aprendido de los datos con los que fue entrenado, reproduciendo estereotipos presentes en la sociedad. Es tu turno, [participante]. Ahora propón un nuevo ejemplo.",
+      "respuesta_concepto_modelo": "Permíteme apoyarte, [participante]. El sesgo en inteligencia artificial es un error sistemático que hace que un modelo trate de forma desigual ciertos datos o grupos. Es tu turno [participante], ahora intenta definirlo con tus propias palabras.",
+      "retroalimentacion_positiva": "Estupendo, [participante]. Tu respuesta es correcta.",
+      "retroalimentacion_negativa": "Lo lamento, [participante]. Tu respuesta es incorrecta.",
+      "pase_otro_concepto": ""
+    }
+  }
+]
