@@ -47,6 +47,27 @@ API_KEY = "TU_API_KEY_AQUI"  #generar de Google AI
 model_name = "gemini-2.5-flash" #Ejemplo
 ```
 
+### 3. Ejecutar el sistema principal
+Verificar en la línea de comandos que se encuentre dentro de la carpeta `experimental`
+
+- Ejecutar el socket de conexión con algún modelo LM `gpt_server.py` (Recomendado: actual configuración) o `gemini_server.py`
+
+```bash
+py gpt_server.py
+```
+
+o 
+
+```bash
+python3 gpt_server.py
+```
+
+- Ejecutar `main.py`
+
+```bash
+python2 main.py
+```
+
 ### 4. Iniciar face-api.js
 1. Abrir en una nueva ventana de VSCode la carpeta `faceapi`
 2. Seleccionar y abrir `index.html`
