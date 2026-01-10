@@ -3,7 +3,7 @@ import json
 from typing import List, Dict
 
 # =============== CONFIG GEMINI ===============
-API_KEY = ""
+API_KEY = "AIzaSyD5Yk9GquqgT2mUDeTsCblGgUiZgn3nHO0"
 
 MODEL  = "gemini-2.5-pro" #ejemplo utilizado
 
@@ -39,7 +39,7 @@ def cargar_conceptos(path: str = "actividades.json") -> List[Dict]:
         # Garantizamos que cada concepto tenga al menos un título
         for i, c in enumerate(data):
             if "titulo" not in c:
-                c["titulo"] = f"Tema {i+1}"
+                c["titulo"] = f"Concepto {i+1}"
         return data
     except Exception as e:
         print(f"Error al cargar {path}: {e}", file=sys.stderr)

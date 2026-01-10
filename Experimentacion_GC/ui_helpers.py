@@ -1,5 +1,5 @@
 from PyQt6.QtCore import Qt, QTimer
-from PyQt6.QtGui import QFont, QPixmap
+from PyQt6.QtGui import QFont, QPixmap, QFontMetrics
 from PyQt6.QtWidgets import (
     QLabel,
     QPushButton,
@@ -137,7 +137,8 @@ class Bubble(QWidget):
 
         self.lbl = QLabel(text)
         self.lbl.setWordWrap(True)
-        self.lbl.setAlignment(Qt.AlignmentFlag.AlignLeft if left else Qt.AlignmentFlag.AlignRight)
+        self.lbl.setAlignment(Qt.AlignmentFlag.AlignLeft)
+        self.lbl.setLayoutDirection(Qt.LayoutDirection.LeftToRight)
         self.lbl.setSizePolicy(
             QSizePolicy.Policy.Preferred,
             QSizePolicy.Policy.Preferred
@@ -156,8 +157,18 @@ class Bubble(QWidget):
         """Ajusta la altura del bubble en función del texto."""
         container = self.window() or self.parentWidget()
         if container:
-            self.lbl.setMaximumWidth(int(container.width() * 0.75))
-            self.lbl.setMinimumWidth(int(container.width() * 0.35))
+            max_width = int(container.width() * 0.55)
+            fm = QFontMetrics(self.lbl.font())
+            lines = self.lbl.text().splitlines() or [""]
+            longest = max(fm.horizontalAdvance(line) for line in lines)
+            padding = 32  # margen interno + padding del layout
+            desired = min(max_width, longest + padding)
+            label_width = max(1, desired - padding)
+            for w in (self.lbl, self.box, self):
+                w.setMinimumWidth(desired)
+                w.setMaximumWidth(desired)
+            self.lbl.setMinimumWidth(label_width)
+            self.lbl.setMaximumWidth(label_width)
 
         self.lbl.adjustSize()
         h = self.lbl.sizeHint().height() + 25

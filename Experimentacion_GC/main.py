@@ -10,9 +10,9 @@ from PyQt6.QtWidgets import QApplication, QWidget, QVBoxLayout, QStackedWidget
 from config import CONCEPTOS, APP_BG
 from gemini_eval import EvalWorker
 from screens import (
-    Presentacion, DatosParticipante, BienvenidaParticipante, TemaView, ChatLeccion,
+    Presentacion, DatosParticipante, BienvenidaParticipante, ConceptoView, ChatLeccion,
     TurnoParticipante, PreguntaView, ProcesandoView, FeedbackView,
-    FinView, HintView, PaseConceptoView
+    FinView, HintView, PaseConceptoView, DescansoView
 )
 
 # ================== EXTRA: WEBSOCKET PARA EMOCIONES ==================
@@ -21,7 +21,7 @@ import io
 import threading
 from SimpleWebSocketServer import SimpleWebSocketServer, WebSocket
 
-WS_HOST = 'localhost'
+WS_HOST = '0.0.0.0'
 WS_PORT = 9000
 ARM_DELAY_MS = 3000  # margen antes de START (ms)
 
@@ -159,8 +159,8 @@ class MainWindow(QWidget):
 
         self._pending_timeline = None  
 
-        # resultados por tema
-        self.results_per_topic = []
+        # resultados por concepto
+        self.results_per_concept = []
 
         self.stack = QStackedWidget(self)
         lay = QVBoxLayout(self)
@@ -171,20 +171,21 @@ class MainWindow(QWidget):
         self.present = Presentacion()        # 0
         self.datos   = DatosParticipante()   # 1
         self.bienvenida = BienvenidaParticipante() # 2
-        self.tema    = TemaView()            # 3
+        self.concepto = ConceptoView()        # 3
         self.chat    = ChatLeccion()         # 4
         self.turno   = TurnoParticipante()   # 5
         self.preg    = PreguntaView()        # 6
         self.proc    = ProcesandoView()      # 7
-        self.fb      = FeedbackView()        # 8
-        self.fin     = FinView()             # 9
-        self.hint    = HintView()            # 10
-        self.pase    = PaseConceptoView()    # 11
+        self.fb       = FeedbackView()        # 8
+        self.fin      = FinView()             # 9
+        self.hint     = HintView()            # 10
+        self.pase     = PaseConceptoView()    # 11
+        self.descanso = DescansoView()        # 12
 
         self.stack.addWidget(self.present)
         self.stack.addWidget(self.datos)
         self.stack.addWidget(self.bienvenida)
-        self.stack.addWidget(self.tema)
+        self.stack.addWidget(self.concepto)
         self.stack.addWidget(self.chat)
         self.stack.addWidget(self.turno)
         self.stack.addWidget(self.preg)
@@ -193,16 +194,17 @@ class MainWindow(QWidget):
         self.stack.addWidget(self.fin)
         self.stack.addWidget(self.hint)
         self.stack.addWidget(self.pase)
+        self.stack.addWidget(self.descanso)
 
         # Conexiones
         self.present.go.connect(self._go_datos)
         self.datos.submitted.connect(self._on_datos)
-        self.bienvenida.cont.connect(self._go_tema)
-        self.tema.done.connect(self._go_chat)
+        self.bienvenida.cont.connect(self._go_concepto)
+        self.concepto.done.connect(self._go_chat)
         self.chat.done.connect(self._go_turno)
         self.turno.cont.connect(self._go_preg)
         self.preg.send.connect(self._go_proc)
-        self.fb.next.connect(self._next_or_finish)
+        self.descanso.cont.connect(self._advance_concept)
         self.hint.proceed.connect(self._hint_proceed)
         self.pase.cont.connect(self._pase_next)
 
@@ -287,7 +289,7 @@ class MainWindow(QWidget):
 
     # -------- RESUMEN DE PUNTUACIONES --------
     def _write_results_summary(self):
-        if not self.results_per_topic:
+        if not self.results_per_concept:
             return
 
         folder = "resultados"
@@ -304,8 +306,8 @@ class MainWindow(QWidget):
         with open(filename, "w", encoding="utf-8") as f:
             f.write(f"Actividad de intervencion - Sujeto {self.num_sujeto}:\n\n")
 
-            for info in self.results_per_topic:
-                f.write(f"Tema {info['tema']}:\n")
+            for info in self.results_per_concept:
+                f.write(f"Concepto {info['concepto']}:\n")
                 f.write(
                     f"Concepto: {'Correcto' if info['concept_correct'] else 'Incorrecto'}\n"
                 )
@@ -356,24 +358,24 @@ class MainWindow(QWidget):
         self._sync_with_emotion_system()
         self.stack.setCurrentIndex(2)
 
-    def _go_tema(self):
+    def _go_concepto(self):
         concepto = self._current_concept()
-        numero_tema = self.idx + 1
+        numero_concepto = self.idx + 1
         self.stage = "concepto"
         self.concept_attempt = 0
         self.example_attempt = 0
         self.last_question_text = ""
 
-        if len(self.results_per_topic) < self.idx + 1:
-            self.results_per_topic.append({
-                "tema": numero_tema,
+        if len(self.results_per_concept) < self.idx + 1:
+            self.results_per_concept.append({
+                "concepto": numero_concepto,
                 "concept_correct": False,
                 "example_correct": False,
             })
 
-        self._timeline_log(f"Tema {numero_tema}: {concepto['titulo']}")
+        self._timeline_log(f"Concepto {numero_concepto}: {concepto['titulo']}")
         self.stack.setCurrentIndex(3)
-        self.tema.mostrar_tema(numero_tema, concepto["titulo"])
+        self.concepto.mostrar_concepto(numero_concepto, concepto["titulo"])
 
     def _go_chat(self):
         self._timeline_log("Fase observacion")
@@ -389,6 +391,25 @@ class MainWindow(QWidget):
 
         self.stack.setCurrentIndex(5)
         QTimer.singleShot(5000, self.turno.cont.emit)
+
+    def _show_result_then_descanso(self, texto: str, positivo: bool):
+        self.fb.show_final(texto, positivo=positivo)
+        self.stack.setCurrentWidget(self.fb)
+        QTimer.singleShot(4000, self._show_descanso)
+
+    def _show_descanso(self):
+        title, duration_secs, btn_text = self._get_descanso_info()
+        self.descanso.set_info(title, duration_secs, btn_text)
+        self.stack.setCurrentWidget(self.descanso)
+
+    def _get_descanso_info(self):
+        total = len(CONCEPTOS)
+        midpoint = total // 2
+        is_midpoint = midpoint > 0 and (self.idx + 1) == midpoint
+        title = "Descanso" if is_midpoint else "Breve descanso"
+        duration_secs = 240 if is_midpoint else 15
+        btn_text = "Siguiente" if self.idx == total - 1 else "Siguiente concepto ➜"
+        return title, duration_secs, btn_text
 
     def _go_preg(self):
         self.stack.setCurrentIndex(6)
@@ -484,8 +505,8 @@ class MainWindow(QWidget):
         pe = self._current_concept()["parte_experimentacion"]
 
         if res.get("correct"):
-            if self.idx < len(self.results_per_topic):
-                self.results_per_topic[self.idx]["concept_correct"] = True
+            if self.idx < len(self.results_per_concept):
+                self.results_per_concept[self.idx]["concept_correct"] = True
             self.stage = "ejemplo"
             self._start_example_stage()
         else:
@@ -498,9 +519,7 @@ class MainWindow(QWidget):
                 self.stack.setCurrentIndex(10)
             else:
                 neg_text = self._replace_participante(pe["retroalimentacion_negativa"])
-                self.after_feedback_action = "next_concept"
-                self.fb.show_final(neg_text, positivo=False, btn_text="Siguiente concepto ➜")
-                self.stack.setCurrentIndex(8)
+                self._show_result_then_descanso(neg_text, positivo=False)
 
     def _start_example_stage(self):
         self.example_attempt = 0
@@ -514,13 +533,11 @@ class MainWindow(QWidget):
         pe = self._current_concept()["parte_experimentacion"]
 
         if res.get("correct"):
-            if self.idx < len(self.results_per_topic):
-                self.results_per_topic[self.idx]["example_correct"] = True
+            if self.idx < len(self.results_per_concept):
+                self.results_per_concept[self.idx]["example_correct"] = True
 
             pos_text = self._replace_participante(pe["retroalimentacion_positiva"])
-            self.after_feedback_action = "next_concept"
-            self.fb.show_final(pos_text, positivo=True, btn_text="Siguiente concepto ➜")
-            self.stack.setCurrentIndex(8)
+            self._show_result_then_descanso(pos_text, positivo=True)
         else:
             if self.example_attempt == 1:
                 hint_text = self._replace_participante(pe["respuesta_modelo"])
@@ -529,9 +546,7 @@ class MainWindow(QWidget):
                 self.stack.setCurrentIndex(10)
             else:
                 neg_text = self._replace_participante(pe["retroalimentacion_negativa"])
-                self.after_feedback_action = "next_concept"
-                self.fb.show_final(neg_text, positivo=False, btn_text="Siguiente concepto ➜")
-                self.stack.setCurrentIndex(8)
+                self._show_result_then_descanso(neg_text, positivo=False)
 
     # -------- tras pantalla de pista --------
     def _hint_proceed(self):
@@ -579,7 +594,7 @@ class MainWindow(QWidget):
             ws_broadcast({"type": "FIN"})
             print("[SYNC] Señal FIN enviada al navegador para guardar CSV de emociones")
         else:
-            self._go_tema()
+            self._go_concepto()
 
 
 def main():

@@ -15,8 +15,13 @@ from config import (
 from ui_helpers import make_title, make_body, make_btn, ChatMessageRow, show_info
 
 # tiempo por mensaje
-PROF_DELAY_MS = 12_000   
-PEPITO_DELAY_MS = 4_000 
+PROF_BASE_MS = 2_000
+PROF_PER_CHAR_MS = 35
+PROF_MAX_MS = 20_000
+
+PEPITO_BASE_MS = 1_500
+PEPITO_PER_CHAR_MS = 30
+PEPITO_MAX_MS = 15_000
 
 
 # =============== PANTALLAS ===============
@@ -91,7 +96,7 @@ class DatosParticipante(QWidget):
 
         self.txt_num = QLineEdit()
         self.txt_num.setMaxLength(8)
-        self.txt_num.setInputMask("99999999")
+        self.txt_num.setValidator(QIntValidator(0, 99999999, self.txt_num))
         self.txt_num.setFixedWidth(360)
         self.txt_num.setFixedHeight(42)
         self.txt_num.setStyleSheet("""
@@ -217,7 +222,7 @@ class BienvenidaParticipante(QWidget):
         return super().resizeEvent(event)
 
 
-class TemaView(QWidget):
+class ConceptoView(QWidget):
     done = pyqtSignal()
 
     def __init__(self):
@@ -227,21 +232,21 @@ class TemaView(QWidget):
         main.setAlignment(Qt.AlignmentFlag.AlignCenter)
         main.setSpacing(12)
 
-        self.lbl_tema = QLabel("")
-        self.lbl_tema.setAlignment(Qt.AlignmentFlag.AlignHCenter)
-        self.lbl_tema.setStyleSheet(f"color:{FG1};")
-        self.lbl_tema.setFont(QFont("Arial", 70, QFont.Weight.Bold))
+        self.lbl_concepto = QLabel("")
+        self.lbl_concepto.setAlignment(Qt.AlignmentFlag.AlignHCenter)
+        self.lbl_concepto.setStyleSheet(f"color:{FG1};")
+        self.lbl_concepto.setFont(QFont("Arial", 70, QFont.Weight.Bold))
 
         self.lbl_titulo = QLabel("")
         self.lbl_titulo.setAlignment(Qt.AlignmentFlag.AlignHCenter)
         self.lbl_titulo.setStyleSheet(f"color:{FG1};")
         self.lbl_titulo.setFont(QFont("Arial", 58, QFont.Weight.Bold))
 
-        main.addWidget(self.lbl_tema)
+        main.addWidget(self.lbl_concepto)
         main.addWidget(self.lbl_titulo)
 
-    def mostrar_tema(self, numero: int, titulo: str):
-        self.lbl_tema.setText(f"Tema {numero}:")
+    def mostrar_concepto(self, numero: int, titulo: str):
+        self.lbl_concepto.setText(f"Concepto {numero}:")
         self.lbl_titulo.setText(titulo)
         QTimer.singleShot(4000, self.done.emit)
 
@@ -335,13 +340,17 @@ class ChatLeccion(QWidget):
                 lambda a=author, tx=text, l=left: self.add_msg(a, tx, l)
             )
 
-            # delay según quién habla
-            if author == PROFESOR:
-                t += PROF_DELAY_MS
-            else:
-                t += PEPITO_DELAY_MS
+            t += self._calc_delay_ms(author, text)
 
         QTimer.singleShot(t + 300, self.btn_next.show)
+
+    def _calc_delay_ms(self, author: str, text: str) -> int:
+        text_len = len(text.strip())
+        if author == PROFESOR:
+            delay = PROF_BASE_MS + (text_len * PROF_PER_CHAR_MS)
+            return min(delay, PROF_MAX_MS)
+        delay = PEPITO_BASE_MS + (text_len * PEPITO_PER_CHAR_MS)
+        return min(delay, PEPITO_MAX_MS)
 
 class TurnoParticipante(QWidget):
     cont = pyqtSignal()
@@ -522,65 +531,43 @@ class ProcesandoView(QWidget):
 
 
 class FeedbackView(QWidget):
-    next = pyqtSignal()
-
     def __init__(self):
         super().__init__()
         self.setStyleSheet(f"background:{APP_BG};")
 
         main = QVBoxLayout(self)
         main.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        main.setSpacing(24)
+        main.setSpacing(22)
 
-        # CABECERA: "Resultado" + icono ✅ / ❌
         self.t = make_title("Resultado")
-        self.t.setFont(QFont("Arial", 48, QFont.Weight.Bold))
+        self.t.setFont(QFont("Arial", 46, QFont.Weight.Bold))
         self.t.setSizePolicy(
             QSizePolicy.Policy.Maximum,
             QSizePolicy.Policy.Preferred
         )
+        self.t.setAlignment(Qt.AlignmentFlag.AlignHCenter)
+        main.addWidget(self.t, 0, Qt.AlignmentFlag.AlignHCenter)
 
-        self.estado = QLabel("")  # aquí va ✅ o ❌
-        self.estado.setAlignment(Qt.AlignmentFlag.AlignVCenter)
-        self.estado.setStyleSheet("color:#ffffff; font: 40pt 'Arial';")
+        self.estado = QLabel("")
+        self.estado.setAlignment(Qt.AlignmentFlag.AlignHCenter)
+        self.estado.setStyleSheet("color:#ffffff; font: 80pt 'Arial';")
         self.estado.setSizePolicy(
             QSizePolicy.Policy.Fixed,
             QSizePolicy.Policy.Fixed
         )
+        main.addWidget(self.estado, 0, Qt.AlignmentFlag.AlignHCenter)
 
-        header = QHBoxLayout()
-        header.setSpacing(12)
-        header.addStretch(1)
-        header.addWidget(self.t, 0, Qt.AlignmentFlag.AlignVCenter)
-        header.addWidget(self.estado, 0, Qt.AlignmentFlag.AlignVCenter)
-        header.addStretch(1)
-
-        main.addLayout(header)
-
-        # FEEDBACK
         self.fb = make_body("")
         self.fb.setFont(QFont("Arial", 28))
+        self.fb.setAlignment(Qt.AlignmentFlag.AlignHCenter)
         main.addWidget(self.fb, 0, Qt.AlignmentFlag.AlignHCenter)
-
-        # BOTÓN
-        main.setSpacing(50)
-        self.btn = make_btn("Siguiente concepto ➜")
-        self.btn.clicked.connect(self.next.emit)
-        main.addWidget(self.btn, 0, Qt.AlignmentFlag.AlignHCenter)
 
         QTimer.singleShot(0, self._update_label_widths)
 
-    def set_result(self, res: dict):
-        ok = res.get("correct")
-        self.estado.setText("✅" if ok else "❌")
-        self.fb.setText("")
-
-    def show_final(self, texto: str, positivo: bool,
-                   btn_text: str = "Siguiente concepto ➜"):
+    def show_final(self, texto: str, positivo: bool):
         self.t.setText("Resultado")
         self.estado.setText("✅" if positivo else "❌")
         self.fb.setText(texto)
-        self.btn.setText(btn_text)
 
     def _update_label_widths(self):
         w = int(self.width() * 0.80)
@@ -680,17 +667,117 @@ class PaseConceptoView(QWidget):
         return super().resizeEvent(event)
 
 
+class DescansoView(QWidget):
+    cont = pyqtSignal()
+
+    def __init__(self):
+        super().__init__()
+        self.setStyleSheet(f"background:{APP_BG};")
+        self._token = 0
+
+        main = QVBoxLayout(self)
+        main.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        main.setSpacing(28)
+
+        self.title = make_title("Breve descanso")
+        self.title.setFont(QFont("Arial", 60, QFont.Weight.Bold))
+        self.title.setAlignment(Qt.AlignmentFlag.AlignHCenter)
+        main.addWidget(self.title, 0, Qt.AlignmentFlag.AlignHCenter)
+
+        self.body = make_body("")
+        self.body.setFont(QFont("Arial", 30))
+        self.body.setAlignment(Qt.AlignmentFlag.AlignHCenter)
+        self.body.setSizePolicy(
+            QSizePolicy.Policy.Preferred,
+            QSizePolicy.Policy.Preferred
+        )
+        main.addWidget(self.body, 0, Qt.AlignmentFlag.AlignHCenter)
+
+        main.addSpacing(30)
+
+        duration_container = QWidget()
+        duration_row = QHBoxLayout(duration_container)
+        duration_row.setContentsMargins(0, 0, 0, 0)
+        duration_row.setSpacing(10)
+
+        self.duration_icon = QLabel("⏱️")
+        self.duration_icon.setAlignment(Qt.AlignmentFlag.AlignVCenter)
+        self.duration_icon.setStyleSheet(f"color:{FG2};")
+        self.duration_icon.setFont(QFont("Arial", 30))
+        duration_row.addWidget(self.duration_icon)
+
+        self.duration = make_body("")
+        self.duration.setFont(QFont("Arial", 34))
+        self.duration.setAlignment(Qt.AlignmentFlag.AlignVCenter)
+        self.duration.setSizePolicy(
+            QSizePolicy.Policy.Maximum,
+            QSizePolicy.Policy.Preferred
+        )
+        self.duration.setWordWrap(False)
+        duration_row.addWidget(self.duration)
+
+        duration_container.setSizePolicy(
+            QSizePolicy.Policy.Maximum,
+            QSizePolicy.Policy.Preferred
+        )
+        main.addWidget(duration_container, 0, Qt.AlignmentFlag.AlignHCenter)
+
+        self.btn = make_btn("Siguiente concepto ➜")
+        self.btn.clicked.connect(self.cont.emit)
+        self.btn.setVisible(False)
+        main.addWidget(self.btn, 0, Qt.AlignmentFlag.AlignHCenter)
+
+        QTimer.singleShot(0, self._update_label_widths)
+
+    def set_info(self, title: str, duration_secs: int, btn_text: str):
+        self._token += 1
+        token = self._token
+        self.title.setText(title)
+        if title == "Breve descanso":
+            self.body.setText("Tómate un momento para pensar en el concepto que acabas de aprender.")
+        else:
+            self.body.setText("Intenta relajar tu cuerpo y tu mente.")
+        show_duration = title != "Breve descanso"
+        self.duration_icon.setVisible(show_duration)
+        self.duration.setVisible(show_duration)
+        self.duration.setText(self._format_duration(duration_secs))
+        self.btn.setText(btn_text)
+        self.btn.setVisible(False)
+
+        QTimer.singleShot(duration_secs * 1000, lambda: self._show_btn(token))
+
+    def _show_btn(self, token: int):
+        if token != self._token:
+            return
+        self.btn.setVisible(True)
+
+    def _format_duration(self, duration_secs: int) -> str:
+        if duration_secs >= 60 and duration_secs % 60 == 0:
+            minutes = duration_secs // 60
+            label = "minuto" if minutes == 1 else "minutos"
+            return f"Duración: {minutes} {label}"
+        if duration_secs == 1:
+            return "Duración: 1 segundo"
+        return f"Duración: {duration_secs} segundos"
+
+    def _update_label_widths(self):
+        w = int(self.width() * 0.80)
+        if w > 0:
+            self.body.setMinimumWidth(w)
+            self.body.setMaximumWidth(w)
+
+    def resizeEvent(self, event):
+        self._update_label_widths()
+        return super().resizeEvent(event)
+
+
 class FinView(QWidget):
     def __init__(self):
         super().__init__()
         self.setStyleSheet(f"background:{APP_BG};")
 
         self.text_template = (
-            "Hemos llegado al final de la sesión de hoy. Gracias por tu tiempo, tu atención y tu participación, "
-            "[participante]. Esperamos que los conceptos que revisamos te hayan resultado claros y útiles, y que "
-            "esta experiencia haya sido tan enriquecedora para ti como lo fue para nosotros. Si tienes preguntas "
-            "o quieres seguir aprendiendo, estaremos encantados de ayudarte en futuras sesiones. Hasta pronto, "
-            "[participante], y que tengas un excelente día."
+            "Hemos llegado al final de la sesión de hoy. Gracias por tu tiempo, tu atención y tu participación, [participante]. Esperamos que los conceptos que revisamos te hayan resultado claros y útiles, y que esta experiencia haya sido tan enriquecedora para ti como lo fue para nosotros. Hasta pronto, [participante], y que tengas un excelente día."
         )
 
         main = QVBoxLayout(self)

@@ -51,15 +51,15 @@ Se guardan datos de las intervenciones y se generan archivos en la carpeta **`re
 
 1. **Registro temporal (timeline) de la intervención**
    - **Ruta:** `resultados/registro_<ID>_timeline.txt`
-   - **Descripción:** registra eventos y marcas de tiempo del flujo experimental (inicio, temas, fases) por cada pregunta:
+   - **Descripción:** registra eventos y marcas de tiempo del flujo experimental (inicio, conceptos, fases) por cada pregunta:
      - tipo (Concepto / Ejemplo)
      - número de intento
      - resultado (Correcto / Incorrecto)
      - duración de respuesta (segundos)
 
-2. **Resumen de puntuaciones por tema**
+2. **Resumen de puntuaciones por concepto**
    - **Ruta:** `resultados/registro_sujeto<ID>_puntuaciones.txt`
-   - **Descripción:** resumen final del desempeño del participante por tema:
+   - **Descripción:** resumen final del desempeño del participante por concepto:
      - si respondió correctamente la pregunta de **concepto**
      - si respondió correctamente el **ejemplo**
      - totales acumulados (conceptos correctos y ejemplos correctos)
@@ -71,4 +71,3 @@ Se guardan datos de las intervenciones y se generan archivos en la carpeta **`re
 
 > **Nota**  
 > El `<ID>` corresponde al DNI del usuario ingresado en la pantalla de **Datos del participante** (por ejemplo: `12345678`).
-
