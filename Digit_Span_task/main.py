@@ -37,7 +37,9 @@ class DigitSpanTask(QWidget):
         
         # Variables de la tarea
         self.participant_id = ""
-        self.current_span = 2
+        self.span_levels = [2, 2, 3, 4, 5, 6, 7, 8]
+        self.level_index = 0
+        self.current_span = self.span_levels[self.level_index]
         self.span_counter = 0  # Contador de intentos (máximo 2)
         self.span_correct = 0  # Si acertó al menos 1 de los 2 intentos
         self.best_span = 1
@@ -752,15 +754,16 @@ class DigitSpanTask(QWidget):
         if self.span_counter >= 2:
             # Si acertó AL MENOS UNO de los 2 intentos
             if self.span_correct >= 1:
-                self.best_span = self.current_span
-                self.current_span += 1
+                self.best_span = max(self.best_span, self.current_span)
+                self.level_index += 1
                 self.span_counter = 0
                 self.span_correct = 0
-                
-                if self.current_span > 8:  # Límite máximo en 8
+
+                if self.level_index >= len(self.span_levels):
                     self.end_task()
                     return
-                    
+
+                self.current_span = self.span_levels[self.level_index]
                 self.show_span_completed()
             else:
                 # Falló ambos intentos
@@ -772,7 +775,10 @@ class DigitSpanTask(QWidget):
     def show_span_completed(self):
         """Mostrar mensaje de nivel completado"""
         self.stack.setCurrentWidget(self.digit_display_view)
-        self.digit_label.setText(f"¡Excelente!\n\nNivel {self.current_span} dígitos")
+        level_num = self.level_index + 1
+        self.digit_label.setText(
+            f"¡Excelente!\n\nNivel {level_num}: {self.current_span} dígitos"
+        )
         self.digit_label.setStyleSheet(f"font-size: 56pt; font-weight: 700; color: {SUCCESS};")
         QTimer.singleShot(2500, self.start_trial)
         
