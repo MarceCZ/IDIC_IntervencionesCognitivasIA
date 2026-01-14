@@ -27,7 +27,7 @@ PROFESORA_AVATAR = "img/profesora_avatar.png"
 PROFESORA        = "img/profesora.png"
 PEPITO_AVATAR    = "img/alumno_avatar.png"
 ALUMNO           = "img/alumno.png"
-
+BIENVENIDA       = "img/bienvenida.png"
 
 # =============== CARGA DE CONCEPTOS DESDE JSON ===============
 def cargar_conceptos(path: str = "actividades.json") -> List[Dict]:

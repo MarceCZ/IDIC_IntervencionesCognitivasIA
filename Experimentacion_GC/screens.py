@@ -1,5 +1,5 @@
 from PyQt6.QtCore import Qt, QTimer, pyqtSignal
-from PyQt6.QtGui import QFont, QIntValidator, QPixmap
+from PyQt6.QtGui import QFont, QIntValidator
 from PyQt6.QtWidgets import (
     QWidget, QLabel, QVBoxLayout, QHBoxLayout, QPushButton,
     QScrollArea, QFrame, QProgressBar,
@@ -10,9 +10,16 @@ from config import (
     APP_BG, FG1, FG2, PRIMARY,
     PROFESOR, PEPITO,
     PROFESORA_AVATAR, PEPITO_AVATAR,
-    PROFESORA, ALUMNO,
+    PROFESORA, ALUMNO, BIENVENIDA,
 )
-from ui_helpers import make_title, make_body, make_btn, ChatMessageRow, show_info
+from ui_helpers import (
+    make_title,
+    make_body,
+    make_btn,
+    ChatMessageRow,
+    show_info,
+    scaled_pixmap,
+)
 
 # tiempo por mensaje
 PROF_BASE_MS = 2_000
@@ -175,14 +182,14 @@ class BienvenidaParticipante(QWidget):
         main.setSpacing(30)
 
         self.img_lbl = QLabel()
-        self.img_lbl.setFixedSize(320, 320)
-        pix = QPixmap(PROFESORA)
+        self.img_lbl.setFixedSize(520, 320)
+        pix = scaled_pixmap(
+            BIENVENIDA,
+            520,
+            320,
+            Qt.AspectRatioMode.KeepAspectRatio,
+        )
         if not pix.isNull():
-            pix = pix.scaled(
-                320, 320,
-                Qt.AspectRatioMode.KeepAspectRatio,
-                Qt.TransformationMode.SmoothTransformation
-            )
             self.img_lbl.setPixmap(pix)
         self.img_lbl.setAlignment(Qt.AlignmentFlag.AlignCenter)
         main.addWidget(self.img_lbl, 0, Qt.AlignmentFlag.AlignHCenter)
@@ -365,15 +372,15 @@ class TurnoParticipante(QWidget):
         main.setSpacing(20)
 
         self.img_lbl = QLabel()
-        self.img_lbl.setFixedSize(320, 320)
+        self.img_lbl.setFixedSize(400, 400)
 
-        pix = QPixmap(PROFESORA)
+        pix = scaled_pixmap(
+            PROFESORA,
+            400,
+            400,
+            Qt.AspectRatioMode.KeepAspectRatio,
+        )
         if not pix.isNull():
-            pix = pix.scaled(
-                320, 320,
-                Qt.AspectRatioMode.KeepAspectRatio,
-                Qt.TransformationMode.SmoothTransformation
-            )
             self.img_lbl.setPixmap(pix)
         self.img_lbl.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
@@ -593,14 +600,14 @@ class HintView(QWidget):
 
         self.img = QLabel()
         self.img.setAlignment(Qt.AlignmentFlag.AlignHCenter)
-        self.img.setFixedSize(320, 320)
-        pix = QPixmap(ALUMNO)
+        self.img.setFixedSize(400, 400)
+        pix = scaled_pixmap(
+            ALUMNO,
+            400,
+            400,
+            Qt.AspectRatioMode.KeepAspectRatio,
+        )
         if not pix.isNull():
-            pix = pix.scaled(
-                320, 320,
-                Qt.AspectRatioMode.KeepAspectRatio,
-                Qt.TransformationMode.SmoothTransformation
-            )
             self.img.setPixmap(pix)
         main.addWidget(self.img, 0, Qt.AlignmentFlag.AlignHCenter)
 

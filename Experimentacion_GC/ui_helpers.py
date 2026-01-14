@@ -1,5 +1,5 @@
 from PyQt6.QtCore import Qt, QTimer
-from PyQt6.QtGui import QFont, QPixmap, QFontMetrics
+from PyQt6.QtGui import QFont, QPixmap, QFontMetrics, QGuiApplication
 from PyQt6.QtWidgets import (
     QLabel,
     QPushButton,
@@ -16,6 +16,25 @@ from config import (
     LEFT_BG, RIGHT_BG, LEFT_FG, RIGHT_FG,
     APP_BG,
 )
+
+
+def scaled_pixmap(
+    path: str,
+    width: int,
+    height: int,
+    aspect: Qt.AspectRatioMode = Qt.AspectRatioMode.KeepAspectRatio,
+    transform: Qt.TransformationMode = Qt.TransformationMode.SmoothTransformation,
+) -> QPixmap:
+    pix = QPixmap(path)
+    if pix.isNull():
+        return pix
+    screen = QGuiApplication.primaryScreen()
+    dpr = screen.devicePixelRatio() if screen else 1.0
+    target_w = max(1, int(width * dpr))
+    target_h = max(1, int(height * dpr))
+    pix = pix.scaled(target_w, target_h, aspect, transform)
+    pix.setDevicePixelRatio(dpr)
+    return pix
 
 
 def make_title(text: str) -> QLabel:
@@ -197,13 +216,13 @@ class ChatMessageRow(QWidget):
 
         avatar_lbl = QLabel()
         avatar_lbl.setFixedSize(105, 105)
-        pix = QPixmap(avatar_path)
+        pix = scaled_pixmap(
+            avatar_path,
+            105,
+            105,
+            Qt.AspectRatioMode.KeepAspectRatioByExpanding,
+        )
         if not pix.isNull():
-            pix = pix.scaled(
-                105, 105,
-                Qt.AspectRatioMode.KeepAspectRatioByExpanding,
-                Qt.TransformationMode.SmoothTransformation
-            )
             avatar_lbl.setPixmap(pix)
         avatar_lbl.setStyleSheet("""
             QLabel {
