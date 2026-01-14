@@ -201,7 +201,7 @@ class DigitSpanTask(QWidget):
         card_layout.addSpacing(20)
         
         # Label
-        label = QLabel("Código de participante:")
+        label = QLabel("Ingrese su número de DNI:")
         label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         label.setWordWrap(True)
         label.setStyleSheet(f"font-size: 20pt; color: {TEXT_DARK};")
