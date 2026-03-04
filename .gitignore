@@ -6,6 +6,10 @@
 env/
 venv/
 
+# Caché de Python
+__pycache__/
+*.py[cod]
+
 # Carpetas de resultados (generadas en runtime)
 resultados/
 */resultados/
