@@ -13,3 +13,6 @@ __pycache__/
 # Carpetas de resultados (generadas en runtime)
 resultados/
 */resultados/
+
+# Datos generados de Digit Span
+Digit_Span_task/data/
