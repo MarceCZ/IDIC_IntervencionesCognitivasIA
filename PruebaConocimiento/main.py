@@ -40,7 +40,7 @@ class MainWindow(QWidget):
         # Estado del quiz
         self.current_index = 0
         self.score = 0
-        self.current_thread: GeminiValidatorThread | None = None
+        self.current_thread: LMValidatorThread | None = None
         self.dni_participante: str = ""
 
         # Stack
@@ -111,7 +111,7 @@ class MainWindow(QWidget):
     def submit_answer(self, question_text: str, user_answer: str):
         self.stack.setCurrentWidget(self.processing_view)
 
-        self.current_thread = GeminiValidatorThread(question_text, user_answer)
+        self.current_thread = LMValidatorThread(question_text, user_answer)
         self.current_thread.finished_eval.connect(self.on_evaluation_finished)
         self.current_thread.start()
 

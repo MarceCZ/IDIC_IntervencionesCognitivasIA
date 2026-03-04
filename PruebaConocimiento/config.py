@@ -1,43 +1,41 @@
 import os
 import json
 from typing import List
-# import google.generativeai as genai
+import google.generativeai as genai
 import requests
 
 # Utiliza la variable de entorno GEMINI_API_KEY para la clave de API
 # API_KEY = "TU_API_KEY" (Gemini, ejemplo)
 API_KEY = "" #Reemplaza con la URL de tu servidor http://XXX.XXX.XXX.XXX:1234/v1/chat/completions 
 
-'''
-Desbloquear el codigo para utilizar Gemini
+# Desbloquear el codigo para utilizar Gemini
 if API_KEY:
     genai.configure(api_key=API_KEY)
 
-MODEL_NAME = "gemini-2.5-flash"
+MODEL_NAME = "gemini-2.5-pro"
 model = genai.GenerativeModel(MODEL_NAME) if API_KEY else None
-'''
+
 # Ruta al JSON con las preguntas
 RUTA_PREGUNTAS_JSON = "conceptos.json"
 
 
 def procesar_GPT(prompt: str) -> str:
-    '''
-    Desbloquear el codigo para utilizar Gemini
+    '''Desbloquear el codigo para utilizar Gemini
     
     Envía un prompt a Gemini y devuelve el texto de respuesta.
-    Lanza excepción si algo falla (la maneja el hilo que llama).
+    Lanza excepción si algo falla (la maneja el hilo que llama).'''
     
     if model is None:
         raise RuntimeError("No hay API KEY configurada para Gemini.")
     resp = model.generate_content(
         prompt,
         generation_config={
-            "temperature": 0.4,
+            "temperature": 0.3,
         }
     )
     return (resp.text or "").strip()
-    '''
-    payload = {
+
+    '''payload = {
         "model": "openai/gpt-oss-20b",
         "messages": [
             {"role": "user", "content": prompt}
@@ -60,7 +58,7 @@ def procesar_GPT(prompt: str) -> str:
             print("ERROR del servidor: Intente de nuevo.")
     else:
         print("Error: No se pudo conectar al servidor.")
-    return "Lo siento, no pude procesar la solicitud."
+    return "Lo siento, no pude procesar la solicitud."'''
 
 def cargar_preguntas_desde_json(ruta: str) -> List[str]:
     """

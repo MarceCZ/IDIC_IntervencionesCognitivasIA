@@ -3,7 +3,7 @@ import json
 from typing import List, Dict
 
 # =============== CONFIG GEMINI ===============
-API_KEY = "AIzaSyD5Yk9GquqgT2mUDeTsCblGgUiZgn3nHO0"
+API_KEY = ""
 
 MODEL  = "gemini-2.5-pro" #ejemplo utilizado
 
@@ -25,7 +25,7 @@ PEPITO   = "Pepito"
 # Rutas de las imágenes de los avatares
 PROFESORA_AVATAR = "img/profesora_avatar.png"
 PROFESORA        = "img/profesora.png"
-PEPITO_AVATAR    = "img/alumno_avatar.png"
+ALUMNO_AVATAR    = "img/alumno_avatar.png"
 ALUMNO           = "img/alumno.png"
 BIENVENIDA       = "img/bienvenida.png"
 

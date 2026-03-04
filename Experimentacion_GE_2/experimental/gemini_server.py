@@ -4,9 +4,9 @@ import os
 import google.generativeai as genai
 
 # Configuración de la API de Google Gemini mediante la variable de entorno o configurar directamente
-API_KEY = "AIzaSyCqqFKaTZ91du2Vun60j8K1blaLgmuSI2I"
+API_KEY = ""
 genai.configure(api_key=API_KEY)
-model_name = "gemini-2.5-flash"
+model_name = "gemini-2.5-pro" # Recomendado conseguir por que no aguanta con el modelo flash
 model = genai.GenerativeModel(model_name)
 
 # Datos

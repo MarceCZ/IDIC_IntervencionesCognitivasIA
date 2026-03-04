@@ -12,7 +12,7 @@ PORT_SOCKET = 12345
 
 # OJO: en tu código lo usas como URL endpoint, no como key.
 # Debe ser algo tipo: http://localhost:8000/v1/chat/completions
-API_ENDPOINT = "http://192.168.137.1:1234/v1/chat/completions"
+API_ENDPOINT = "http://10.143.67.89:1234/v1/chat/completions"
 
 RUTA = "./respuesta.wav"  # audio descargado desde NAO (por tu script Py2)
 

@@ -6,7 +6,7 @@ import google.generativeai as genai
 # Configuración de la API de Google Gemini mediante la variable de entorno o configurar directamente
 API_KEY = "TU_API_KEY_AQUI"  # Reemplaza con tu clave de API de Google Gemini
 genai.configure(api_key=API_KEY)
-model_name = "gemini-2.5-flash"
+model_name = "gemini-2.5-pro" # Recomendado conseguir por que no aguanta con el modelo flash
 model = genai.GenerativeModel(model_name)
 
 # Datos

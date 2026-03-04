@@ -5,3 +5,7 @@
 # Entornos virtuales Python
 env/
 venv/
+
+# Carpetas de resultados (generadas en runtime)
+resultados/
+*/resultados/

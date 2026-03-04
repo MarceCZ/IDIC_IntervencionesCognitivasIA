@@ -1,0 +1,61 @@
+Timeline de intervención - 70526731 (Lucia Neyra)
+
+[00:00] Cronometro iniciado
+[00:00] Pantalla de bienvenida mostrada
+[00:00] [SYNC] START sincronizado (emociones)
+[00:23] Concepto 1: Inteligencia Artificial (IA)
+[00:27] Fase observacion
+[01:54] Fase experimental
+[04:05] Concepto | Intento: 1 | Resultado: Correcto - duración: 112.05 s
+[04:38] Ejemplo | Intento: 1 | Resultado: Incorrecto - duración: 22.92 s
+[06:17] Ejemplo | Intento: 2 | Resultado: Correcto - duración: 69.20 s
+[06:42] Concepto 2: Algoritmo
+[06:46] Fase observacion
+[08:12] Fase experimental
+[08:55] Concepto | Intento: 1 | Resultado: Correcto - duración: 27.66 s
+[10:26] Ejemplo | Intento: 1 | Resultado: Correcto - duración: 80.32 s
+[10:48] Concepto 3: Atributo
+[10:52] Fase observacion
+[12:34] Fase experimental
+[13:13] Concepto | Intento: 1 | Resultado: Correcto - duración: 23.54 s
+[15:46] Ejemplo | Intento: 1 | Resultado: Correcto - duración: 140.83 s
+[16:09] Concepto 4: Instancia
+[16:13] Fase observacion
+[17:43] Fase experimental
+[18:04] Concepto | Intento: 1 | Resultado: Incorrecto - duración: 8.19 s
+[18:44] Concepto | Intento: 2 | Resultado: Correcto - duración: 26.88 s
+[19:57] Ejemplo | Intento: 1 | Resultado: Incorrecto - duración: 62.15 s
+[21:30] Ejemplo | Intento: 2 | Resultado: Correcto - duración: 42.72 s
+[25:37] Concepto 5: Dataset
+[25:41] Fase observacion
+[26:49] Fase experimental
+[27:29] Concepto | Intento: 1 | Resultado: Incorrecto - duración: 21.21 s
+[28:30] Concepto | Intento: 2 | Resultado: Incorrecto - duración: 48.04 s
+[29:28] Concepto | Intento: 3 | Resultado: Correcto - duración: 23.23 s
+[30:12] Ejemplo | Intento: 1 | Resultado: Incorrecto - duración: 34.88 s
+[31:14] Ejemplo | Intento: 2 | Resultado: Correcto - duración: 24.42 s
+[31:35] Concepto 6: Modelo
+[31:39] Fase observacion
+[33:25] Fase experimental
+[33:57] Concepto | Intento: 1 | Resultado: Incorrecto - duración: 13.71 s
+[34:52] Concepto | Intento: 2 | Resultado: Incorrecto - duración: 41.38 s
+[35:42] Concepto | Intento: 3 | Resultado: Correcto - duración: 22.29 s
+[36:10] Ejemplo | Intento: 1 | Resultado: Incorrecto - duración: 18.43 s
+[37:24] Ejemplo | Intento: 2 | Resultado: Correcto - duración: 36.21 s
+[37:45] Concepto 7: Regresión
+[37:49] Fase observacion
+[38:39] Fase experimental
+[39:31] Concepto | Intento: 1 | Resultado: Correcto - duración: 33.72 s
+[40:16] Ejemplo | Intento: 1 | Resultado: Correcto - duración: 32.92 s
+[40:38] Concepto 8: Clasificación
+[40:42] Fase observacion
+[42:12] Fase experimental
+[42:45] Concepto | Intento: 1 | Resultado: Correcto - duración: 17.51 s
+[43:51] Ejemplo | Intento: 1 | Resultado: Correcto - duración: 55.48 s
+[44:14] Concepto 9: Sesgo
+[44:18] Fase observacion
+[45:58] Fase experimental
+[46:56] Concepto | Intento: 1 | Resultado: Correcto - duración: 42.09 s
+[47:24] Ejemplo | Intento: 1 | Resultado: Incorrecto - duración: 19.94 s
+[49:25] Ejemplo | Intento: 2 | Resultado: Correcto - duración: 47.18 s
+[49:46] Fin de la intervención

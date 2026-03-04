@@ -9,14 +9,14 @@ from PyQt6.QtWidgets import (
 from config import (
     APP_BG, FG1, FG2, PRIMARY,
     PROFESOR, PEPITO,
-    PROFESORA_AVATAR, PEPITO_AVATAR,
+    PROFESORA_AVATAR, ALUMNO_AVATAR,
     PROFESORA, ALUMNO, BIENVENIDA,
+    LEFT_BG, RIGHT_BG, LEFT_FG, RIGHT_FG,
 )
 from ui_helpers import (
     make_title,
     make_body,
     make_btn,
-    ChatMessageRow,
     show_info,
     scaled_pixmap,
 )
@@ -29,6 +29,11 @@ PROF_MAX_MS = 20_000
 PEPITO_BASE_MS = 1_500
 PEPITO_PER_CHAR_MS = 30
 PEPITO_MAX_MS = 15_000
+PEPITO_EXTRA_MS = 2_000
+
+HINT_PER_CHAR_MS = 35
+HINT_EXTRA_MS = 2_000
+HINT_MAX_MS = 25_000
 
 
 # =============== PANTALLAS ===============
@@ -155,13 +160,14 @@ class DatosParticipante(QWidget):
 
         if not num or not nom:
             # <<< AVISO >>>
-            show_info(self, "Aviso", "Completa el número de sujeto y tu nombre.")
+            show_info(self, "Aviso", "Completa el nÇ§mero de sujeto y tu nombre.")
             return
 
         self.submitted.emit(num, nom)
 
+
 class BienvenidaParticipante(QWidget):
-    cont = pyqtSignal()   # señal para continuar
+    cont = pyqtSignal()   # seÇñal para continuar
 
     def __init__(self):
         super().__init__()
@@ -207,7 +213,7 @@ class BienvenidaParticipante(QWidget):
         main.addWidget(self.lbl_texto, 0, Qt.AlignmentFlag.AlignHCenter)
         main.setSpacing(40)
 
-        # Botón continuar
+        # BotÇün continuar
         self.btn = make_btn("Continuar")
         self.btn.clicked.connect(self.cont.emit)
         main.addWidget(self.btn, 0, Qt.AlignmentFlag.AlignHCenter)
@@ -264,100 +270,194 @@ class ChatLeccion(QWidget):
     def __init__(self):
         super().__init__()
         self.setStyleSheet(f"background:{APP_BG};")
+        self._token = 0
+        self._pasos = []
+        self._step_index = 0
+
         root = QVBoxLayout(self)
-        root.setContentsMargins(16, 16, 16, 16)
-        root.setSpacing(12)
+        root.setContentsMargins(32, 24, 32, 24)
+        root.setSpacing(20)
 
-        title = make_title("Observación")
-        title.setAlignment(Qt.AlignmentFlag.AlignHCenter)
-        title.setStyleSheet(f"color:{FG1};")
-        title.setFont(QFont("Arial", 58, QFont.Weight.Bold))
-        root.addWidget(title)
+        stage = QWidget()
+        stage_layout = QVBoxLayout(stage)
+        stage_layout.setContentsMargins(0, 0, 0, 0)
+        stage_layout.setSpacing(0)
+        stage_layout.addStretch(1)
 
-        self.scroll = QScrollArea()
-        self.scroll.setWidgetResizable(True)
-        self.scroll.setStyleSheet(f"background:{APP_BG}; border:none;")
-        root.addWidget(self.scroll)
+        self.left_row = QWidget()
+        left_layout = QHBoxLayout(self.left_row)
+        left_layout.setContentsMargins(0, 0, 0, 0)
+        left_layout.setSpacing(24)
 
-        self.content = QWidget()
-        self.content.setStyleSheet(f"background:{APP_BG};")
-        self.v = QVBoxLayout(self.content)
-        self.v.setContentsMargins(8, 8, 8, 8)
-        self.v.setSpacing(4)
-        self.v.addStretch(1)
+        self.left_avatar = QLabel()
+        self.left_avatar.setFixedSize(300, 300)
+        self.left_avatar.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        left_layout.addWidget(self.left_avatar, 0, Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignBottom)
 
-        self.scroll.setWidget(self.content)
-
-        self.btn_next = QPushButton("Siguiente ➜")
-        self.btn_next.setCursor(Qt.CursorShape.PointingHandCursor)
-        self.btn_next.setFixedWidth(360)
-        self.btn_next.setFixedHeight(70)
-        self.btn_next.setStyleSheet(f"""
-            QPushButton {{
-                background:{PRIMARY};
-                color:white;
-                border:none;
-                padding:14px 24px;
-                border-radius:12px;
-                font: 25pt "Arial";
-                font-weight:600;
+        self.left_bubble = QFrame()
+        self.left_bubble.setStyleSheet(f"""
+            QFrame {{
+                background:{LEFT_BG};
+                border-radius:24px;
             }}
-            QPushButton:hover {{
-                background:#1d4ed8;
+            QLabel {{
+                color:{LEFT_FG};
+                font: 28pt "Arial";
             }}
         """)
-        self.btn_next.clicked.connect(self.done.emit)
-        self.btn_next.hide()
-        root.addWidget(self.btn_next, 0, Qt.AlignmentFlag.AlignHCenter)
+        left_bubble_layout = QVBoxLayout(self.left_bubble)
+        left_bubble_layout.setContentsMargins(28, 20, 28, 20)
+        left_bubble_layout.setSpacing(0)
+
+        self.left_text = QLabel("")
+        self.left_text.setWordWrap(True)
+        self.left_text.setAlignment(Qt.AlignmentFlag.AlignJustify | Qt.AlignmentFlag.AlignTop)
+        left_bubble_layout.addWidget(self.left_text)
+
+        left_layout.addWidget(self.left_bubble, 1, Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignTop)
+        left_layout.addStretch(1)
+        stage_layout.addWidget(self.left_row)
+
+        self.right_row = QWidget()
+        right_layout = QHBoxLayout(self.right_row)
+        right_layout.setContentsMargins(0, 0, 0, 0)
+        right_layout.setSpacing(24)
+
+        self.right_bubble = QFrame()
+        self.right_bubble.setStyleSheet(f"""
+            QFrame {{
+                background:{RIGHT_BG};
+                border-radius:24px;
+            }}
+            QLabel {{
+                color:{RIGHT_FG};
+                font: 28pt "Arial";
+            }}
+        """)
+        right_bubble_layout = QVBoxLayout(self.right_bubble)
+        right_bubble_layout.setContentsMargins(28, 20, 28, 20)
+        right_bubble_layout.setSpacing(0)
+
+        self.right_text = QLabel("")
+        self.right_text.setWordWrap(True)
+        self.right_text.setAlignment(Qt.AlignmentFlag.AlignJustify | Qt.AlignmentFlag.AlignTop)
+        right_bubble_layout.addWidget(self.right_text)
+
+        self.right_avatar = QLabel()
+        self.right_avatar.setFixedSize(300, 300)
+        self.right_avatar.setAlignment(Qt.AlignmentFlag.AlignCenter)
+
+        right_layout.addStretch(1)
+        right_layout.addWidget(self.right_bubble, 1, Qt.AlignmentFlag.AlignRight | Qt.AlignmentFlag.AlignTop)
+        right_layout.addWidget(self.right_avatar, 0, Qt.AlignmentFlag.AlignRight | Qt.AlignmentFlag.AlignBottom)
+
+        stage_layout.addWidget(self.right_row)
+        stage_layout.addStretch(1)
+
+        root.addWidget(stage)
+
+        self._clear_message()
+        QTimer.singleShot(0, self._update_bubble_widths)
 
     def clear(self):
-        while self.v.count() > 1:
-            item = self.v.takeAt(0)
-            w = item.widget()
-            if w:
-                w.deleteLater()
+        self._clear_message()
 
     def add_msg(self, author: str, text: str, left: bool):
-        avatar = PROFESORA_AVATAR if author == PROFESOR else PEPITO_AVATAR
-        row = ChatMessageRow(author, text, left, avatar, parent=self.content)
-        self.v.insertWidget(self.v.count()-1, row, 0)
-
-        QTimer.singleShot(50, lambda: self.scroll.verticalScrollBar().setValue(
-            self.scroll.verticalScrollBar().maximum()
-        ))
+        self._show_message(author, text, left)
 
     def start_sequence(self, concepto: dict):
         self.clear()
-        self.btn_next.hide()  # botón Siguiente oculto al inicio
+        self._token += 1
+        token = self._token
 
         obs = concepto["parte_observacion"]
-        pasos = [
+        self._pasos = [
             (PROFESOR, obs["profesor_explica"], True),
             (PEPITO,   obs["alumno_respuesta_parcialmente_incorrecta"], False),
             (PROFESOR, obs["profesor_corrige"], True),
             (PEPITO,   obs["alumno_ejemplo_correcto"], False),
             (PROFESOR, obs["profesor_valida"], True),
         ]
-
-        t = 0  # tiempo acumulado
-
-        for author, text, left in pasos:
-            QTimer.singleShot(
-                t,
-                lambda a=author, tx=text, l=left: self.add_msg(a, tx, l)
-            )
-
-            t += self._calc_delay_ms(author, text)
-
-        QTimer.singleShot(t + 300, self.btn_next.show)
+        self._step_index = 0
+        self._show_step(token)
 
     def _calc_delay_ms(self, author: str, text: str) -> int:
         text_len = len(text.strip())
         if author == PROFESOR:
             delay = PROF_BASE_MS + (text_len * PROF_PER_CHAR_MS)
             return min(delay, PROF_MAX_MS)
-        delay = PEPITO_BASE_MS + (text_len * PEPITO_PER_CHAR_MS)
+        delay = PEPITO_BASE_MS + (text_len * PEPITO_PER_CHAR_MS) + PEPITO_EXTRA_MS
         return min(delay, PEPITO_MAX_MS)
+
+    def _show_step(self, token: int):
+        if token != self._token:
+            return
+        if self._step_index >= len(self._pasos):
+            self.done.emit()
+            return
+
+        author, text, left = self._pasos[self._step_index]
+        self._step_index += 1
+        self.add_msg(author, text, left)
+
+        delay = self._calc_delay_ms(author, text)
+        QTimer.singleShot(delay, lambda: self._hide_then_advance(token))
+
+    def _hide_then_advance(self, token: int):
+        if token != self._token:
+            return
+        self._clear_message()
+        QTimer.singleShot(250, lambda: self._show_step(token))
+
+    def _show_message(self, author: str, text: str, left: bool):
+        if left:
+            self.left_text.setText(text)
+            pix = scaled_pixmap(
+                PROFESORA_AVATAR,
+                300,
+                300,
+                Qt.AspectRatioMode.KeepAspectRatio,
+            )
+            if not pix.isNull():
+                self.left_avatar.setPixmap(pix)
+            self.left_row.show()
+            self.right_row.hide()
+        else:
+            self.right_text.setText(text)
+            pix = scaled_pixmap(
+                ALUMNO_AVATAR,
+                300,
+                300,
+                Qt.AspectRatioMode.KeepAspectRatio,
+            )
+            if not pix.isNull():
+                self.right_avatar.setPixmap(pix)
+            self.right_row.show()
+            self.left_row.hide()
+        self._update_bubble_widths()
+
+    def _clear_message(self):
+        self.left_row.hide()
+        self.right_row.hide()
+        self.left_text.setText("")
+        self.right_text.setText("")
+
+    def _update_bubble_widths(self):
+        max_width = max(420, int(self.width() * 0.55))
+        text_width = max(260, max_width - 56)
+        for frame, label in (
+            (self.left_bubble, self.left_text),
+            (self.right_bubble, self.right_text),
+        ):
+            frame.setMinimumWidth(max_width)
+            frame.setMaximumWidth(max_width)
+            label.setMinimumWidth(text_width)
+            label.setMaximumWidth(text_width)
+
+    def resizeEvent(self, event):
+        self._update_bubble_widths()
+        return super().resizeEvent(event)
+
 
 class TurnoParticipante(QWidget):
     cont = pyqtSignal()
@@ -399,10 +499,16 @@ class TurnoParticipante(QWidget):
 
 class PreguntaView(QWidget):
     send = pyqtSignal(str)
+    no_response = pyqtSignal()
 
     def __init__(self):
         super().__init__()
         self.setStyleSheet(f"background:{APP_BG};")
+        self._submitted = False
+        self._idle_timer = QTimer(self)
+        self._idle_timer.setSingleShot(True)
+        self._idle_timer.setInterval(9500)
+        self._idle_timer.timeout.connect(self._auto_send)
 
         main = QVBoxLayout(self)
         main.setContentsMargins(0, 0, 0, 0)
@@ -443,6 +549,7 @@ class PreguntaView(QWidget):
             }
         """)
         self.txt.setAlignment(Qt.AlignmentFlag.AlignLeft)
+        self.txt.textChanged.connect(self._on_text_changed)
 
         main.setSpacing(50)
 
@@ -468,14 +575,45 @@ class PreguntaView(QWidget):
         self.lbl_preg.setText(texto)
         self.txt.clear()
         self.txt.setFocus()
+        self._submitted = False
+        self.btn.setEnabled(True)
+        self._start_idle_timer()
 
     def _enviar(self):
+        if self._submitted:
+            return
         texto = self.txt.toPlainText().strip()
         if not texto:
             # <<< AVISO CON TEXTO VISIBLE >>>
             show_info(self, "Aviso", "Por favor, escribe una respuesta.")
             return
+        self._submitted = True
+        self._idle_timer.stop()
         self.send.emit(texto)
+
+    def _start_idle_timer(self):
+        if self._submitted:
+            return
+        self._idle_timer.stop()
+        self._idle_timer.start()
+
+    def _on_text_changed(self):
+        if self._submitted:
+            return
+        self._start_idle_timer()
+
+    def _auto_send(self):
+        if self._submitted:
+            return
+        self._submitted = True
+        self.btn.setEnabled(False)
+        texto = self.txt.toPlainText().strip()
+        if texto:
+            self.send.emit(texto)
+        else:
+            self.no_response.emit()
+
+
 class ProcesandoView(QWidget):
     def __init__(self):
         super().__init__()
@@ -588,12 +726,13 @@ class FeedbackView(QWidget):
 
 
 class HintView(QWidget):
-    """Ventana de pista / respuesta modelo con botón para continuar a responder."""
+    """Ventana de pista / respuesta modelo con botİn para continuar a responder."""
     proceed = pyqtSignal()
 
     def __init__(self):
         super().__init__()
         self.setStyleSheet(f"background:{APP_BG};")
+        self._token = 0
         main = QVBoxLayout(self)
         main.setAlignment(Qt.AlignmentFlag.AlignCenter)
         main.setSpacing(30)
@@ -617,12 +756,27 @@ class HintView(QWidget):
 
         self.btn = make_btn("Responder ahora")
         self.btn.clicked.connect(self.proceed.emit)
+        self.btn.setVisible(False)
         main.addWidget(self.btn, 0, Qt.AlignmentFlag.AlignHCenter)
 
         QTimer.singleShot(0, self._update_label_widths)
 
     def set_text(self, texto: str):
         self.body.setText(texto)
+        self._token += 1
+        token = self._token
+        delay = self._calc_hint_delay_ms(texto)
+        QTimer.singleShot(delay, lambda: self._auto_proceed(token))
+
+    def _auto_proceed(self, token: int):
+        if token != self._token:
+            return
+        self.proceed.emit()
+
+    def _calc_hint_delay_ms(self, texto: str) -> int:
+        text_len = len(texto.strip())
+        delay = (text_len * HINT_PER_CHAR_MS) + HINT_EXTRA_MS
+        return min(delay, HINT_MAX_MS)
 
     def _update_label_widths(self):
         w = int(self.width() * 0.80)
@@ -654,7 +808,7 @@ class PaseConceptoView(QWidget):
         self.body.setFont(QFont("Arial", 32))
         main.addWidget(self.body, 0, Qt.AlignmentFlag.AlignHCenter)
 
-        self.btn = make_btn("Siguiente concepto ➜")
+        self.btn = make_btn("Siguiente concepto ƒzo")
         self.btn.clicked.connect(self.cont.emit)
         main.addWidget(self.btn, 0, Qt.AlignmentFlag.AlignHCenter)
 
@@ -686,6 +840,19 @@ class DescansoView(QWidget):
         main.setAlignment(Qt.AlignmentFlag.AlignCenter)
         main.setSpacing(28)
 
+        self.img = QLabel()
+        self.img.setAlignment(Qt.AlignmentFlag.AlignHCenter)
+        self.img.setFixedSize(400, 400)
+        pix = scaled_pixmap(
+            PROFESORA_AVATAR,
+            400,
+            400,
+            Qt.AspectRatioMode.KeepAspectRatio,
+        )
+        if not pix.isNull():
+            self.img.setPixmap(pix)
+        main.addWidget(self.img, 0, Qt.AlignmentFlag.AlignHCenter)
+
         self.title = make_title("Breve descanso")
         self.title.setFont(QFont("Arial", 60, QFont.Weight.Bold))
         self.title.setAlignment(Qt.AlignmentFlag.AlignHCenter)
@@ -707,7 +874,7 @@ class DescansoView(QWidget):
         duration_row.setContentsMargins(0, 0, 0, 0)
         duration_row.setSpacing(10)
 
-        self.duration_icon = QLabel("⏱️")
+        self.duration_icon = QLabel("⏳")
         self.duration_icon.setAlignment(Qt.AlignmentFlag.AlignVCenter)
         self.duration_icon.setStyleSheet(f"color:{FG2};")
         self.duration_icon.setFont(QFont("Arial", 30))
@@ -729,11 +896,6 @@ class DescansoView(QWidget):
         )
         main.addWidget(duration_container, 0, Qt.AlignmentFlag.AlignHCenter)
 
-        self.btn = make_btn("Siguiente concepto ➜")
-        self.btn.clicked.connect(self.cont.emit)
-        self.btn.setVisible(False)
-        main.addWidget(self.btn, 0, Qt.AlignmentFlag.AlignHCenter)
-
         QTimer.singleShot(0, self._update_label_widths)
 
     def set_info(self, title: str, duration_secs: int, btn_text: str):
@@ -748,15 +910,13 @@ class DescansoView(QWidget):
         self.duration_icon.setVisible(show_duration)
         self.duration.setVisible(show_duration)
         self.duration.setText(self._format_duration(duration_secs))
-        self.btn.setText(btn_text)
-        self.btn.setVisible(False)
 
-        QTimer.singleShot(duration_secs * 1000, lambda: self._show_btn(token))
+        QTimer.singleShot(duration_secs * 1000, lambda: self._auto_advance(token))
 
-    def _show_btn(self, token: int):
+    def _auto_advance(self, token: int):
         if token != self._token:
             return
-        self.btn.setVisible(True)
+        self.cont.emit()
 
     def _format_duration(self, duration_secs: int) -> str:
         if duration_secs >= 60 and duration_secs % 60 == 0:
@@ -784,7 +944,7 @@ class FinView(QWidget):
         self.setStyleSheet(f"background:{APP_BG};")
 
         self.text_template = (
-            "Hemos llegado al final de la sesión de hoy. Gracias por tu tiempo, tu atención y tu participación, [participante]. Esperamos que los conceptos que revisamos te hayan resultado claros y útiles, y que esta experiencia haya sido tan enriquecedora para ti como lo fue para nosotros. Hasta pronto, [participante], y que tengas un excelente día."
+           "Hemos llegado al final de la sesión de hoy. Gracias por tu tiempo, tu atención y tu participación, [participante]. Esperamos que los conceptos que revisamos te hayan resultado claros y útiles, y que esta experiencia haya sido tan enriquecedora para ti como lo fue para nosotros. Hasta pronto, [participante], y que tengas un excelente día."
         )
 
         main = QVBoxLayout(self)
@@ -846,4 +1006,3 @@ class FinView(QWidget):
         app = QApplication.instance()
         if app is not None:
             app.quit()
-

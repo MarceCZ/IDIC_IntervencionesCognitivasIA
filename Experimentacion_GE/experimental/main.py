@@ -31,6 +31,7 @@ ws_clients = []
 web_ready = False
 t0_ms = None            # epoch ms de inicio compartido
 START_TS = None         # ancla monotónica local (para _elapsed)
+current_sujeto_id = None  # numero de dni del sujeto
 
 # ================== CONFIG NAO / TCP RESPUESTA ==================
 NAO1_IP = "192.168.137.22"
@@ -50,6 +51,10 @@ try:
         os.makedirs(RESULTS_DIR)
 except Exception as e:
     print("[RESULTS_DIR] WARNING al crear carpeta:", e)
+
+def build_csv_filename(sujeto_id):
+    """Nombre canonico para el CSV de emociones."""
+    return "emociones_sujeto{}.csv".format(sujeto_id)
 
 # ================== CRONÓMETRO / LOG ==================
 def _elapsed():
@@ -86,7 +91,7 @@ def log_event(logfile, message):
 # ================== SERVIDOR WS ==================
 class SyncServer(WebSocket):
     def handleMessage(self):
-        global web_ready
+        global web_ready, current_sujeto_id
         try:
             msg = json.loads(self.data)
         except Exception:
@@ -95,8 +100,13 @@ class SyncServer(WebSocket):
         # HELLO handshake
         if msg.get('type') == 'HELLO' and msg.get('role') == 'web':
             print("[WEB] HELLO recibido")
-            # Puedes adjuntar sujeto_id si ya lo tuvieras
             self.sendMessage(json.dumps({"type": "ACK", "role": "python-server"}))
+            if current_sujeto_id:
+                self.sendMessage(json.dumps({
+                    "type": "META",
+                    "sujeto_id": current_sujeto_id,
+                    "csv_filename": build_csv_filename(current_sujeto_id)
+                }))
             return
 
         # READY del navegador
@@ -107,15 +117,21 @@ class SyncServer(WebSocket):
 
         # CSV recibido desde el navegador -> guardar en ./resultados
         if msg.get('type') == 'CSV_DATA':
-            sujeto_id = msg.get('sujeto_id', 'NA')
+            sujeto_id = current_sujeto_id or msg.get('sujeto_id', 'NA')
             csv_text = msg.get('csv_text', '')
             try:
                 if not os.path.isdir(RESULTS_DIR):
                     os.makedirs(RESULTS_DIR)
-                csv_path = os.path.join(RESULTS_DIR, "emociones_sujeto{}.csv".format(sujeto_id))
+                csv_filename = build_csv_filename(sujeto_id)
+                csv_path = os.path.join(RESULTS_DIR, csv_filename)
                 with io.open(csv_path, "w", encoding="utf-8") as f:
                     f.write(csv_text)
                 print("[WS] CSV guardado:", csv_path)
+                self.sendMessage(json.dumps({
+                    "type": "CSV_SAVED",
+                    "sujeto_id": sujeto_id,
+                    "csv_filename": csv_filename
+                }))
             except Exception as e:
                 print("[WS] Error guardando CSV:", e)
             return
@@ -589,6 +605,7 @@ def colocar_nombre_participante(data, nombre):
         return data
 
 def main():
+    global current_sujeto_id
     # 1) WS server
     t = threading.Thread(target=run_ws_server)
     t.daemon = True
@@ -600,6 +617,7 @@ def main():
 
     # 3) GUI sujeto+nombre
     sujeto_id, nombre = pedir_sujeto_gui()
+    current_sujeto_id = sujeto_id
 
     # 4) Rutas de logs/textos
     log_filename = os.path.join(RESULTS_DIR, "registro_{0}.txt".format(sujeto_id))
@@ -612,7 +630,11 @@ def main():
     actividades = colocar_nombre_participante(actividades, nombre)
 
     # 6) Informar al navegador el sujeto_id
-    ws_broadcast({"type": "META", "sujeto_id": sujeto_id})
+    ws_broadcast({
+        "type": "META",
+        "sujeto_id": sujeto_id,
+        "csv_filename": build_csv_filename(sujeto_id)
+    })
 
     # 7) Esperar READY del navegador -> ARM/START
     print("[SYNC] Esperando READY del navegador")
@@ -684,7 +706,11 @@ def main():
     # 12) Guardar resumen por sujeto
     guardar_registro(resultados, sujeto_id, log_filename)
 
-    ws_broadcast({"type": "FIN"})
+    ws_broadcast({
+        "type": "FIN",
+        "sujeto_id": sujeto_id,
+        "csv_filename": build_csv_filename(sujeto_id)
+    })
     print("[SYNC] Señal FIN enviada al navegador para guardar CSV")
     time.sleep(1.0)
 

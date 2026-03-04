@@ -204,6 +204,7 @@ class MainWindow(QWidget):
         self.chat.done.connect(self._go_turno)
         self.turno.cont.connect(self._go_preg)
         self.preg.send.connect(self._go_proc)
+        self.preg.no_response.connect(self._go_no_response)
         self.descanso.cont.connect(self._advance_concept)
         self.hint.proceed.connect(self._hint_proceed)
         self.pase.cont.connect(self._pase_next)
@@ -469,6 +470,27 @@ class MainWindow(QWidget):
         self.worker = EvalWorker(self.user_text, concepto_eval)
         self.worker.finished.connect(self._got_eval)
         self.worker.start()
+
+    def _go_no_response(self):
+        self.user_text = ""
+
+        if self.stage == "concepto":
+            attempt = self.concept_attempt + 1
+        else:
+            attempt = self.example_attempt + 1
+
+        rt = self._log_response_time()
+        label = "Concepto" if self.stage == "concepto" else "Ejemplo"
+        if rt is not None:
+            self._timeline_log(f"{label} | Intento: {attempt} | Sin respuesta - duraciÇün: {rt:.2f} s")
+        else:
+            self._timeline_log(f"{label} | Intento: {attempt} | Sin respuesta")
+
+        res = {"correct": False}
+        if self.stage == "concepto":
+            self._handle_concept_eval(res)
+        else:
+            self._handle_example_eval(res)
 
     def _got_eval(self, res: dict):
         print("[DEBUG] Resultado recibido desde Gemini en main:", res)

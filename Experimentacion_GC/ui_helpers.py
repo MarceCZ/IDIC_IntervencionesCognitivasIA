@@ -156,7 +156,7 @@ class Bubble(QWidget):
 
         self.lbl = QLabel(text)
         self.lbl.setWordWrap(True)
-        self.lbl.setAlignment(Qt.AlignmentFlag.AlignLeft)
+        self.lbl.setAlignment(Qt.AlignmentFlag.AlignJustify | Qt.AlignmentFlag.AlignTop)
         self.lbl.setLayoutDirection(Qt.LayoutDirection.LeftToRight)
         self.lbl.setSizePolicy(
             QSizePolicy.Policy.Preferred,
