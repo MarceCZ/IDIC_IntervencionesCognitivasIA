@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Emotion Capture</title>
+
+  <script defer src="face-api.min.js"></script>
+  <script defer src="script.js"></script>
+
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      width: 100vw;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: #111;
+    }
+
+    video {
+      z-index: 1;
+    }
+
+    canvas {
+      position: absolute;
+      z-index: 2;
+    }
+
+    /* ===== Botón CSV ===== */
+    #downloadCsvBtn {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      z-index: 10;
+
+      padding: 12px 18px;
+      font-size: 14px;
+      font-weight: 600;
+
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+
+      background: #1e88e5;
+      color: white;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    }
+
+    #downloadCsvBtn:disabled {
+      background: #555;
+      cursor: not-allowed;
+      opacity: 0.7;
+    }
+
+    #downloadCsvBtn:hover:not(:disabled) {
+      background: #1565c0;
+    }
+  </style>
+</head>
+
+<body>
+  <video id="video" width="720" height="560" autoplay muted></video>
+
+  <!-- Botón de descarga manual -->
+  <button id="downloadCsvBtn" disabled>
+    Descargar emociones (CSV)
+  </button>
+</body>
+</html>
